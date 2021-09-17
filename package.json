@@ -1,0 +1,12 @@
+{
+  "name": "@jaredh159/swiftest",
+  "version": "1.0.0",
+  "description": "TODO",
+  "main": "index.js",
+  "scripts": {
+    "start": "watchexec --restart --watch Sources --exts swift --signal SIGINT swift build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

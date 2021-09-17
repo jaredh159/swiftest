@@ -1,0 +1,1 @@
+Swiftest.main()
