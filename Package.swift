@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "swiftest",
+  platforms: [.macOS(.v10_15)],
   products: [
     .executable(name: "swiftest", targets: ["swiftest"]),
     .library(name: "SwiftestLib", targets: ["SwiftestLib"]),
