@@ -4,7 +4,6 @@ import Foundation
 import Rainbow
 import SwiftestLib
 
-private var testTimer: Timer?
 private var testTask: DispatchWorkItem?
 
 final class Swiftest: ParsableCommand {
@@ -35,18 +34,6 @@ final class Swiftest: ParsableCommand {
 
     try execTest()
     dispatchMain()
-  }
-
-  private func debouncedTest() {
-    testTask?.cancel()
-
-    testTask = DispatchWorkItem { [weak self] in
-      try? self?.execTest()
-    }
-
-    if let task = testTask {
-      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: task)
-    }
   }
 
   private func execTest() throws {
@@ -84,9 +71,31 @@ final class Swiftest: ParsableCommand {
     group.wait()
   }
 
+  private func debouncedTest() {
+    testTask?.cancel()
+
+    testTask = DispatchWorkItem { [weak self] in
+      try? self?.execTest()
+    }
+
+    if let task = testTask {
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: task)
+    }
+  }
+
   func handleLine(_ line: String) {
-    print("\("LINE:".dim.cyan) \(line)")
+    // should probably not recreate this for every line, but just testing...
+    let parser = Parser()
+    let output = OutputHandler(quiet: false, quieter: false, isCI: false, { print($0) })
+    guard let formatted = parser.parse(line: line, colored: true, additionalLines: { nil }) else {
+      return
+    }
+    output.write(parser.outputType, formatted)
   }
 }
 
-// for putting in background, use DispatchQueue.global().async { }, @see https://stackoverflow.com/a/60044783/208770
+// @TODOS
+// jest-style controls for isolating on the fly, re-running
+// parsing the lines of test output ala xcbeautify
+// getting test output from a handful of open source swift libraries
+// configuration, yaml decodable, with `st init` to generate one
