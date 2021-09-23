@@ -1,6 +1,5 @@
 import Foundation
-// import XcbeautifyLib
-import SwiftestLib
+import SwiftestPretty
 import XCTest
 
 class OutputHandlerTests: XCTestCase {

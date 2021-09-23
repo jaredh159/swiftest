@@ -2,7 +2,7 @@ import ArgumentParser
 import FileWatcher
 import Foundation
 import Rainbow
-import SwiftestLib
+import SwiftestPretty
 
 private var testTask: DispatchWorkItem?
 

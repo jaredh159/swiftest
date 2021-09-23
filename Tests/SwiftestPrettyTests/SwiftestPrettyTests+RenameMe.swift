@@ -1,9 +1,8 @@
 import XCTest
 
-// @testable import XcbeautifyLib
-@testable import SwiftestLib
+@testable import SwiftestPretty
 
-final class XcbeautifyLibTests: XCTestCase {
+final class SwiftestPrettyTests: XCTestCase {
   let parser = Parser()
 
   private func noColoredFormatted(_ string: String) -> String? {
