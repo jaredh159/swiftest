@@ -1,9 +1,14 @@
+import Rainbow
 import XCTest
 
 @testable import SwiftestPretty
 
 final class SwiftestPrettyTests: XCTestCase {
   let parser = Parser()
+
+  override class func setUp() {
+    Rainbow.enabled = false
+  }
 
   private func noColoredFormatted(_ string: String) -> String? {
     return parser.parse(line: string, colored: false, additionalLines: { nil })
@@ -57,7 +62,8 @@ final class SwiftestPrettyTests: XCTestCase {
       "clang: error: linker command failed with exit code 1 (use -v to see invocation)")
     XCTAssertEqual(
       formatted,
-      "[x] clang: error: linker command failed with exit code 1 (use -v to see invocation)")
+      "\(Symbol.error.rawValue) clang: error: linker command failed with exit code 1 (use -v to see invocation)"
+    )
   }
 
   func testCleanRemove() {
@@ -234,7 +240,7 @@ final class SwiftestPrettyTests: XCTestCase {
     let formatted = noColoredFormatted(
       "Test case '-[XcbeautifyLibTests.XcbeautifyLibTests testBuildTarget]' passed on 'xctest (49438)' (0.131 seconds)."
     )
-    XCTAssertEqual(formatted, "    ✔ testBuildTarget (0.131) seconds)")
+    XCTAssertEqual(formatted, "    ✔ testBuildTarget (0.131 seconds)")
   }
 
   func testParallelTestingStarted() {
@@ -325,7 +331,7 @@ final class SwiftestPrettyTests: XCTestCase {
     )
     XCTAssertEqual(
       formatted,
-      "[x]   \"NetworkBusiness.ImageDownloadManager.saveImage(image: __C.UIImage, needWatermark: Swift.Bool, params: [Swift.String : Any], downloadHandler: (Swift.Bool) -> ()?) -> ()\", referenced from:"
+      "\(Symbol.error.rawValue)   \"NetworkBusiness.ImageDownloadManager.saveImage(image: __C.UIImage, needWatermark: Swift.Bool, params: [Swift.String : Any], downloadHandler: (Swift.Bool) -> ()?) -> ()\", referenced from:"
     )
     XCTAssertEqual(parser.outputType, .warning)
   }
@@ -336,7 +342,7 @@ final class SwiftestPrettyTests: XCTestCase {
     )
     XCTAssertEqual(
       formatted,
-      "[!]       MediaBrowser.ChatGalleryViewController.downloadImage() -> () in MediaBrowser(ChatGalleryViewController.o)"
+      "\(Symbol.warning.rawValue)       MediaBrowser.ChatGalleryViewController.downloadImage() -> () in MediaBrowser(ChatGalleryViewController.o)"
     )
     XCTAssertEqual(parser.outputType, .warning)
   }

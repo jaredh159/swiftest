@@ -9,7 +9,6 @@ enum TestStatus: String {
 enum Symbol: String {
   case error = "❌"
   case asciiError = "[x]"
-
   case warning = "⚠️"
   case asciiWarning = "[!]"
 }

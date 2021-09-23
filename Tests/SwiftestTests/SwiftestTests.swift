@@ -5,9 +5,9 @@ final class SwiftestTests: XCTestCase {
     // @TODO scaffold a SPM cli package again, recover their boilerplate for
     // testing a CLI app, and make some basic assertions...
     XCTAssertEqual(true, true)
-    XCTAssertEqual(true, false)
+    // XCTAssertEqual(true, false)
     // testing handling fatal error...
-    let foo: String? = nil
-    XCTAssert(foo! == "bar")
+    // let foo: String? = nil
+    // XCTAssert(foo! == "bar")
   }
 }

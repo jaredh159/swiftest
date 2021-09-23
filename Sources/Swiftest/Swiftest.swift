@@ -1,7 +1,6 @@
 import ArgumentParser
 import FileWatcher
 import Foundation
-import Rainbow
 import SwiftestPretty
 
 private var testTask: DispatchWorkItem?
@@ -23,27 +22,23 @@ final class Swiftest: ParsableCommand {
   var watch = false
 
   func run() throws {
-    Rainbow.enabled = false
-    print("Howdy".red.onYellow)
-    // print("Plain text".red.onYellow.bold.clearColor.clearBackgroundColor.clearStyles)
+    if !watch {
+      try execTest()
+      return
+    }
 
-    // if !watch {
-    //   try execTest()
-    //   return
-    // }
+    let cwd = FileManager.default.currentDirectoryPath
+    let filewatcher = FileWatcher(["\(cwd)/Sources", "\(cwd)/Tests"])
+    filewatcher.queue = DispatchQueue.global()
+    filewatcher.callback = { [weak self] event in
+      if event.path.hasSuffix(".swift") {
+        self?.debouncedTest()
+      }
+    }
+    filewatcher.start()
 
-    // let cwd = FileManager.default.currentDirectoryPath
-    // let filewatcher = FileWatcher(["\(cwd)/Sources", "\(cwd)/Tests"])
-    // filewatcher.queue = DispatchQueue.global()
-    // filewatcher.callback = { [weak self] event in
-    //   if event.path.hasSuffix(".swift") {
-    //     self?.debouncedTest()
-    //   }
-    // }
-    // filewatcher.start()
-
-    // try execTest()
-    // dispatchMain()
+    try execTest()
+    dispatchMain()
   }
 
   private func execTest() throws {
@@ -106,9 +101,6 @@ final class Swiftest: ParsableCommand {
 
 // @TODOS
 // ...next...
-// 1) fork Xcbeautify (or maybe wait a bit, till it settles?)
-// 2) prettify, and commit
-// 3) rip out Colorizer, switch to Rainbow
 
 // jest-style controls for isolating on the fly, re-running
 // parsing the lines of test output ala xcbeautify

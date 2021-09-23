@@ -12,7 +12,6 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     .package(url: "https://github.com/onevcat/Rainbow", from: "4.0.0"),
-    .package(url: "https://github.com/getGuaka/Colorizer.git", from: "0.1.0"),  // for Xcbeautify @TEMP @TODO remove
     .package(url: "https://github.com/eonist/FileWatcher.git", from: "0.2.3"),
   ],
   targets: [
@@ -26,10 +25,10 @@ let package = Package(
       dependencies: [
         "SwiftestPretty",
         "FileWatcher",
-        "Colorizer",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ]
     ),
-    .testTarget(name: "SwiftestTests", dependencies: ["SwiftestPretty", "Colorizer"]),
+    .testTarget(name: "SwiftestTests", dependencies: []),
+    .testTarget(name: "SwiftestPrettyTests", dependencies: ["SwiftestPretty"]),
   ]
 )
