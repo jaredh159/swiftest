@@ -10,6 +10,16 @@ final class XcbeautifyLibTests: XCTestCase {
     return parser.parse(line: string, colored: false, additionalLines: { nil })
   }
 
+  func testFatalError_Isolate() throws {
+    let formatted = noColoredFormatted(
+      "swiftestTests/swiftestTests.swift:9: Fatal error: Unexpectedly found nil while unwrapping an Optional value"
+    )
+    XCTAssertEqual(
+      formatted,
+      "Fatal error: Unexpectedly found nil while unwrapping an Optional value [swiftestTests/swiftestTests.swift:9]"
+    )
+  }
+
   func testAggregateTarget() {
     let formatted = noColoredFormatted(
       "=== BUILD AGGREGATE TARGET Be Aggro OF PROJECT AggregateExample WITH CONFIGURATION Debug ==="

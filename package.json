@@ -4,7 +4,13 @@
   "description": "TODO",
   "main": "index.js",
   "scripts": {
-    "start": "watchexec --restart --watch Sources --exts swift --signal SIGINT swift build"
+    "start": "watchexec --restart --watch Sources --exts swift --signal SIGINT swift build",
+    "test": "swift test 2>&1 | xcbeautify",
+    "test:isolate": "swift test --filter Isolate 2>&1 | xcbeautify",
+    "test:clear": "clear && printf '\\e[3J' && npm run test; echo",
+    "test:clear:isolate": "clear && printf '\\e[3J' && npm run test:isolate; echo",
+    "test:watch": "watchexec --restart --watch Sources --watch Tests --exts swift npm run test:clear",
+    "test:watch:isolate": "watchexec --restart --watch Sources --watch Tests --exts swift npm run test:clear:isolate"
   },
   "keywords": [],
   "author": "",

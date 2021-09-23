@@ -6,6 +6,12 @@ import SwiftestLib
 
 private var testTask: DispatchWorkItem?
 
+extension String {
+  func withColor(_ color: Bool) -> String {
+    return color ? self : self.clearColor.clearStyles.clearBackgroundColor
+  }
+}
+
 final class Swiftest: ParsableCommand {
 
   static var configurations = CommandConfiguration(
@@ -17,23 +23,27 @@ final class Swiftest: ParsableCommand {
   var watch = false
 
   func run() throws {
-    if !watch {
-      try execTest()
-      return
-    }
+    Rainbow.enabled = false
+    print("Howdy".red.onYellow)
+    // print("Plain text".red.onYellow.bold.clearColor.clearBackgroundColor.clearStyles)
 
-    let cwd = FileManager.default.currentDirectoryPath
-    let filewatcher = FileWatcher(["\(cwd)/Sources", "\(cwd)/Tests"])
-    filewatcher.queue = DispatchQueue.global()
-    filewatcher.callback = { [weak self] event in
-      if event.path.hasSuffix(".swift") {
-        self?.debouncedTest()
-      }
-    }
-    filewatcher.start()
+    // if !watch {
+    //   try execTest()
+    //   return
+    // }
 
-    try execTest()
-    dispatchMain()
+    // let cwd = FileManager.default.currentDirectoryPath
+    // let filewatcher = FileWatcher(["\(cwd)/Sources", "\(cwd)/Tests"])
+    // filewatcher.queue = DispatchQueue.global()
+    // filewatcher.callback = { [weak self] event in
+    //   if event.path.hasSuffix(".swift") {
+    //     self?.debouncedTest()
+    //   }
+    // }
+    // filewatcher.start()
+
+    // try execTest()
+    // dispatchMain()
   }
 
   private func execTest() throws {
@@ -95,6 +105,11 @@ final class Swiftest: ParsableCommand {
 }
 
 // @TODOS
+// ...next...
+// 1) fork Xcbeautify (or maybe wait a bit, till it settles?)
+// 2) prettify, and commit
+// 3) rip out Colorizer, switch to Rainbow
+
 // jest-style controls for isolating on the fly, re-running
 // parsing the lines of test output ala xcbeautify
 // getting test output from a handful of open source swift libraries
