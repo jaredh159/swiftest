@@ -10,145 +10,145 @@ extension String {
     _colored = colored
 
     switch pattern {
-    case .jared:
-      return formatFatalError(pattern: pattern)
-    case .analyze:
-      return formatAnalyze(pattern: pattern)
-    case .compile:
-      #if os(Linux)
-        return formatCompileLinux(pattern: pattern)
-      #else
-        fallthrough
-      #endif
-    case .compileXib,
-      .compileStoryboard:
-      return formatCompile(pattern: pattern)
-    case .compileCommand:
-      return formatCompileCommand(pattern: pattern)
-    case .buildTarget:
-      return formatTargetCommand(command: "Build", pattern: pattern)
-    case .analyzeTarget:
-      return formatTargetCommand(command: "Analyze", pattern: pattern)
-    case .aggregateTarget:
-      return formatTargetCommand(command: "Aggregate", pattern: pattern)
-    case .cleanTarget:
-      return formatTargetCommand(command: "Clean", pattern: pattern)
-    case .generateCoverageData,
-      .generatedCoverageReport:
-      return formatCodeCoverage(pattern: pattern)
-    case .generateDsym:
-      return formatGenerateDsym(pattern: pattern)
-    case .libtool:
-      return formatLibtool(pattern: pattern)
-    case .linking:
-      #if os(Linux)
-        return formatLinkingLinux(pattern: pattern)
-      #else
-        return formatLinking(pattern: pattern)
-      #endif
-    case .testSuiteStarted,
-      .testSuiteStart,
-      .parallelTestingStarted,
-      .parallelTestingPassed,
-      .parallelTestingFailed,
-      .parallelTestSuiteStarted:
-      return formatTestHeading(pattern: pattern)
-    case .failingTest,
-      .uiFailingTest,
-      .restartingTests,
-      .testCasePassed,
-      .testCasePending,
-      .testCaseMeasured,
-      .testsRunCompletion,
-      .parallelTestCasePassed,
-      .parallelTestCaseAppKitPassed,
-      .parallelTestCaseFailed:
-      return formatTest(pattern: pattern)
-    case .codesign:
-      return format(command: "Signing", pattern: pattern)
-    case .codesignFramework:
-      return formatCodeSignFramework(pattern: pattern)
-    case .copyHeader,
-      .copyPlist,
-      .copyStrings,
-      .cpresource,
-      .pbxcp:
-      return formatCopy(pattern: pattern)
-    case .checkDependencies:
-      return format(command: "Check Dependencies", pattern: .checkDependencies, arguments: "")
-    case .processInfoPlist:
-      return formatProcessInfoPlist(pattern: .processInfoPlist)
-    case .processPch:
-      return formatProcessPch(pattern: pattern)
-    case .touch:
-      return formatTouch(pattern: pattern)
-    case .phaseSuccess:
-      let phase = capturedGroups(with: .phaseSuccess)[0].capitalized
-      return _colored ? "\(phase) Succeeded".s.Bold.f.Green : "\(phase) Succeeded"
-    case .phaseScriptExecution:
-      return formatPhaseScriptExecution()
-    case .preprocess:
-      return format(command: "Preprocessing", pattern: pattern, arguments: "$1")
-    case .processPchCommand:
-      return formatProcessPchCommand(pattern: pattern)
-    case .writeFile:
-      return nil
-    case .writeAuxiliaryFiles:
-      return nil
-    case .shellCommand:
-      return nil
-    case .cleanRemove:
-      return formatCleanRemove(pattern: pattern)
-    case .executed:
-      return nil
-    case .testCaseStarted:
-      return nil
-    case .tiffutil:
-      return nil
-    case .compileWarning:
-      return formatCompileWarning(pattern: pattern, additionalLines: additionalLines)
-    case .ldWarning:
-      return formatLdWarning(pattern: pattern)
-    case .genericWarning:
-      return formatWarning(pattern: pattern)
-    case .willNotBeCodeSigned:
-      return formatWillNotBeCodesignWarning(pattern: pattern)
-    case .clangError,
-      .fatalError,
-      .ldError,
-      .podsError,
-      .moduleIncludesError:
-      return formatError(pattern: pattern)
-    case .compileError:
-      return formatCompileError(pattern: pattern, additionalLines: additionalLines)
-    case .fileMissingError:
-      return formatFileMissingError(pattern: pattern)
-    case .checkDependenciesErrors:
-      return formatError(pattern: pattern)
-    case .provisioningProfileRequired:
-      return formatError(pattern: pattern)
-    case .noCertificate:
-      return formatError(pattern: pattern)
-    case .cursor:
-      return nil
-    case .linkerDuplicateSymbolsLocation:
-      return nil
-    case .linkerDuplicateSymbols:
-      return formatLinkerDuplicateSymbolsError(pattern: pattern)
-    case .linkerUndefinedSymbolLocation:
-      return nil
-    case .linkerUndefinedSymbols:
-      return formatLinkerUndefinedSymbolsError(pattern: pattern)
-    case .symbolReferencedFrom:
-      return formatCompleteError()
-    case .undefinedSymbolLocation:
-      return formatCompleteWarning()
-    case .packageGraphResolvingStart:
-      return formatPackageStart()
-    case .packageGraphResolvingEnded:
-      return formatPackageEnd(pattern: pattern)
-    case .packageGraphResolvedItem:
-      return formatPackgeItem(pattern: pattern)
+      case .jared:
+        return formatFatalError(pattern: pattern)
+      case .analyze:
+        return formatAnalyze(pattern: pattern)
+      case .compile:
+        #if os(Linux)
+          return formatCompileLinux(pattern: pattern)
+        #else
+          fallthrough
+        #endif
+      case .compileXib,
+        .compileStoryboard:
+        return formatCompile(pattern: pattern)
+      case .compileCommand:
+        return formatCompileCommand(pattern: pattern)
+      case .buildTarget:
+        return formatTargetCommand(command: "Build", pattern: pattern)
+      case .analyzeTarget:
+        return formatTargetCommand(command: "Analyze", pattern: pattern)
+      case .aggregateTarget:
+        return formatTargetCommand(command: "Aggregate", pattern: pattern)
+      case .cleanTarget:
+        return formatTargetCommand(command: "Clean", pattern: pattern)
+      case .generateCoverageData,
+        .generatedCoverageReport:
+        return formatCodeCoverage(pattern: pattern)
+      case .generateDsym:
+        return formatGenerateDsym(pattern: pattern)
+      case .libtool:
+        return formatLibtool(pattern: pattern)
+      case .linking:
+        #if os(Linux)
+          return formatLinkingLinux(pattern: pattern)
+        #else
+          return formatLinking(pattern: pattern)
+        #endif
+      case .testSuiteStarted,
+        .testSuiteStart,
+        .parallelTestingStarted,
+        .parallelTestingPassed,
+        .parallelTestingFailed,
+        .parallelTestSuiteStarted:
+        return formatTestHeading(pattern: pattern)
+      case .failingTest,
+        .uiFailingTest,
+        .restartingTests,
+        .testCasePassed,
+        .testCasePending,
+        .testCaseMeasured,
+        .testsRunCompletion,
+        .parallelTestCasePassed,
+        .parallelTestCaseAppKitPassed,
+        .parallelTestCaseFailed:
+        return formatTest(pattern: pattern)
+      case .codesign:
+        return format(command: "Signing", pattern: pattern)
+      case .codesignFramework:
+        return formatCodeSignFramework(pattern: pattern)
+      case .copyHeader,
+        .copyPlist,
+        .copyStrings,
+        .cpresource,
+        .pbxcp:
+        return formatCopy(pattern: pattern)
+      case .checkDependencies:
+        return format(command: "Check Dependencies", pattern: .checkDependencies, arguments: "")
+      case .processInfoPlist:
+        return formatProcessInfoPlist(pattern: .processInfoPlist)
+      case .processPch:
+        return formatProcessPch(pattern: pattern)
+      case .touch:
+        return formatTouch(pattern: pattern)
+      case .phaseSuccess:
+        let phase = capturedGroups(with: .phaseSuccess)[0].capitalized
+        return _colored ? "\(phase) Succeeded".s.Bold.f.Green : "\(phase) Succeeded"
+      case .phaseScriptExecution:
+        return formatPhaseScriptExecution()
+      case .preprocess:
+        return format(command: "Preprocessing", pattern: pattern, arguments: "$1")
+      case .processPchCommand:
+        return formatProcessPchCommand(pattern: pattern)
+      case .writeFile:
+        return nil
+      case .writeAuxiliaryFiles:
+        return nil
+      case .shellCommand:
+        return nil
+      case .cleanRemove:
+        return formatCleanRemove(pattern: pattern)
+      case .executed:
+        return nil
+      case .testCaseStarted:
+        return nil
+      case .tiffutil:
+        return nil
+      case .compileWarning:
+        return formatCompileWarning(pattern: pattern, additionalLines: additionalLines)
+      case .ldWarning:
+        return formatLdWarning(pattern: pattern)
+      case .genericWarning:
+        return formatWarning(pattern: pattern)
+      case .willNotBeCodeSigned:
+        return formatWillNotBeCodesignWarning(pattern: pattern)
+      case .clangError,
+        .fatalError,
+        .ldError,
+        .podsError,
+        .moduleIncludesError:
+        return formatError(pattern: pattern)
+      case .compileError:
+        return formatCompileError(pattern: pattern, additionalLines: additionalLines)
+      case .fileMissingError:
+        return formatFileMissingError(pattern: pattern)
+      case .checkDependenciesErrors:
+        return formatError(pattern: pattern)
+      case .provisioningProfileRequired:
+        return formatError(pattern: pattern)
+      case .noCertificate:
+        return formatError(pattern: pattern)
+      case .cursor:
+        return nil
+      case .linkerDuplicateSymbolsLocation:
+        return nil
+      case .linkerDuplicateSymbols:
+        return formatLinkerDuplicateSymbolsError(pattern: pattern)
+      case .linkerUndefinedSymbolLocation:
+        return nil
+      case .linkerUndefinedSymbols:
+        return formatLinkerUndefinedSymbolsError(pattern: pattern)
+      case .symbolReferencedFrom:
+        return formatCompleteError()
+      case .undefinedSymbolLocation:
+        return formatCompleteWarning()
+      case .packageGraphResolvingStart:
+        return formatPackageStart()
+      case .packageGraphResolvingEnded:
+        return formatPackageEnd(pattern: pattern)
+      case .packageGraphResolvedItem:
+        return formatPackgeItem(pattern: pattern)
     }
   }
 
@@ -269,16 +269,16 @@ extension String {
 
   private func formatCodeCoverage(pattern: Pattern) -> String? {
     switch pattern {
-    case .generateCoverageData:
-      return _colored
-        ? "\("Generating".s.Bold) code coverage data..." : "Generating code coverage data..."
-    case .generatedCoverageReport:
-      let filePath = capturedGroups(with: pattern)[0]
-      return _colored
-        ? "\("Generated".s.Bold) code coverage report: \(filePath.s.Italic)"
-        : "Generated code coverage report: \(filePath)"
-    default:
-      return nil
+      case .generateCoverageData:
+        return _colored
+          ? "\("Generating".s.Bold) code coverage data..." : "Generating code coverage data..."
+      case .generatedCoverageReport:
+        let filePath = capturedGroups(with: pattern)[0]
+        return _colored
+          ? "\("Generated".s.Bold) code coverage report: \(filePath.s.Italic)"
+          : "Generated code coverage report: \(filePath)"
+      default:
+        return nil
     }
   }
 
@@ -329,21 +329,21 @@ extension String {
     let testSuite = groups[0]
 
     switch pattern {
-    case .testSuiteStart:
-      return _colored ? testSuite.s.Bold : testSuite
-    case .testSuiteStarted,
-      .parallelTestSuiteStarted:
-      let deviceDescription = pattern == .parallelTestSuiteStarted ? " on '\(groups[1])'" : ""
-      let heading = "Test Suite \(testSuite) started\(deviceDescription)"
-      return _colored ? heading.s.Bold.f.Cyan : heading
-    case .parallelTestingStarted:
-      return _colored ? s.Bold.f.Cyan : self
-    case .parallelTestingPassed:
-      return _colored ? s.Bold.f.Green : self
-    case .parallelTestingFailed:
-      return _colored ? s.Bold.f.Red : self
-    default:
-      return nil
+      case .testSuiteStart:
+        return _colored ? testSuite.s.Bold : testSuite
+      case .testSuiteStarted,
+        .parallelTestSuiteStarted:
+        let deviceDescription = pattern == .parallelTestSuiteStarted ? " on '\(groups[1])'" : ""
+        let heading = "Test Suite \(testSuite) started\(deviceDescription)"
+        return _colored ? heading.s.Bold.f.Cyan : heading
+      case .parallelTestingStarted:
+        return _colored ? s.Bold.f.Cyan : self
+      case .parallelTestingPassed:
+        return _colored ? s.Bold.f.Green : self
+      case .parallelTestingFailed:
+        return _colored ? s.Bold.f.Red : self
+      default:
+        return nil
     }
   }
 
@@ -352,65 +352,65 @@ extension String {
     let groups = capturedGroups(with: pattern)
 
     switch pattern {
-    case .testCasePassed:
-      let testCase = groups[1]
-      let time = groups[2]
-      return _colored
-        ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
-          + " (\(time.coloredTime()) seconds)"
-        : indent + TestStatus.pass.rawValue + " " + testCase + " (\(time) seconds)"
-    case .failingTest:
-      let testCase = groups[2]
-      let failingReason = groups[3]
-      return _colored
-        ? indent + TestStatus.fail.rawValue.foreground.Red + " " + testCase + ", " + failingReason
-        : indent + TestStatus.fail.rawValue + " " + testCase + ", " + failingReason
-    case .uiFailingTest:
-      let file = groups[0]
-      let failingReason = groups[1]
-      return _colored
-        ? indent + TestStatus.fail.rawValue.foreground.Red + " " + file + ", " + failingReason
-        : indent + TestStatus.fail.rawValue + " " + file + ", " + failingReason
-    case .restartingTests:
-      return self
-    case .testCasePending:
-      let testCase = groups[1]
-      return _colored
-        ? indent + TestStatus.pending.rawValue.foreground.Yellow + " " + testCase + " [PENDING]"
-        : indent + TestStatus.pending.rawValue + " " + testCase + " [PENDING]"
-    case .testsRunCompletion:
-      return nil
-    case .testCaseMeasured:
-      let testCase = groups[1]
-      let time = groups[2]
-      return _colored
-        ? indent + TestStatus.measure.rawValue.foreground.Yellow + " " + testCase
-          + " measured (\(time.coloredTime()) seconds)"
-        : indent + TestStatus.measure.rawValue + " " + testCase + " measured (\(time) seconds)"
-    case .parallelTestCasePassed:
-      let testCase = groups[1]
-      let device = groups[2]
-      let time = groups[3]
-      return _colored
-        ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
-          + " on '\(device)' (\(time.coloredTime()) seconds)"
-        : indent + TestStatus.pass.rawValue + " " + testCase + " on '\(device)' (\(time) seconds)"
-    case .parallelTestCaseAppKitPassed:
-      let testCase = groups[1]
-      let time = groups[2]
-      return _colored
-        ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
-          + " (\(time.coloredTime()) seconds)"
-        : indent + TestStatus.pass.rawValue + " " + testCase + " (\(time)) seconds)"
-    case .parallelTestCaseFailed:
-      let testCase = groups[1]
-      let device = groups[2]
-      let time = groups[3]
-      return _colored
-        ? "    \(TestStatus.fail.rawValue.f.Red) \(testCase) on '\(device)' (\(time.coloredTime()) seconds)"
-        : "    \(TestStatus.fail.rawValue) \(testCase) on '\(device)' (\(time) seconds)"
-    default:
-      return nil
+      case .testCasePassed:
+        let testCase = groups[1]
+        let time = groups[2]
+        return _colored
+          ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
+            + " (\(time.coloredTime()) seconds)"
+          : indent + TestStatus.pass.rawValue + " " + testCase + " (\(time) seconds)"
+      case .failingTest:
+        let testCase = groups[2]
+        let failingReason = groups[3]
+        return _colored
+          ? indent + TestStatus.fail.rawValue.foreground.Red + " " + testCase + ", " + failingReason
+          : indent + TestStatus.fail.rawValue + " " + testCase + ", " + failingReason
+      case .uiFailingTest:
+        let file = groups[0]
+        let failingReason = groups[1]
+        return _colored
+          ? indent + TestStatus.fail.rawValue.foreground.Red + " " + file + ", " + failingReason
+          : indent + TestStatus.fail.rawValue + " " + file + ", " + failingReason
+      case .restartingTests:
+        return self
+      case .testCasePending:
+        let testCase = groups[1]
+        return _colored
+          ? indent + TestStatus.pending.rawValue.foreground.Yellow + " " + testCase + " [PENDING]"
+          : indent + TestStatus.pending.rawValue + " " + testCase + " [PENDING]"
+      case .testsRunCompletion:
+        return nil
+      case .testCaseMeasured:
+        let testCase = groups[1]
+        let time = groups[2]
+        return _colored
+          ? indent + TestStatus.measure.rawValue.foreground.Yellow + " " + testCase
+            + " measured (\(time.coloredTime()) seconds)"
+          : indent + TestStatus.measure.rawValue + " " + testCase + " measured (\(time) seconds)"
+      case .parallelTestCasePassed:
+        let testCase = groups[1]
+        let device = groups[2]
+        let time = groups[3]
+        return _colored
+          ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
+            + " on '\(device)' (\(time.coloredTime()) seconds)"
+          : indent + TestStatus.pass.rawValue + " " + testCase + " on '\(device)' (\(time) seconds)"
+      case .parallelTestCaseAppKitPassed:
+        let testCase = groups[1]
+        let time = groups[2]
+        return _colored
+          ? indent + TestStatus.pass.rawValue.foreground.Green + " " + testCase
+            + " (\(time.coloredTime()) seconds)"
+          : indent + TestStatus.pass.rawValue + " " + testCase + " (\(time)) seconds)"
+      case .parallelTestCaseFailed:
+        let testCase = groups[1]
+        let device = groups[2]
+        let time = groups[3]
+        return _colored
+          ? "    \(TestStatus.fail.rawValue.f.Red) \(testCase) on '\(device)' (\(time.coloredTime()) seconds)"
+          : "    \(TestStatus.fail.rawValue) \(testCase) on '\(device)' (\(time) seconds)"
+      default:
+        return nil
     }
   }
 
