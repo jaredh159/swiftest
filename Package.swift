@@ -3,10 +3,10 @@
 import PackageDescription
 
 let package = Package(
-  name: "swiftest",
+  name: "Swiftest",
   platforms: [.macOS(.v10_15)],
   products: [
-    .executable(name: "swiftest", targets: ["swiftest"]),
+    .executable(name: "Swiftest", targets: ["Swiftest"]),
     .library(name: "SwiftestLib", targets: ["SwiftestLib"]),
   ],
   dependencies: [
@@ -22,7 +22,7 @@ let package = Package(
         .product(name: "Rainbow", package: "Rainbow")
       ]),
     .target(
-      name: "swiftest",
+      name: "Swiftest",
       dependencies: [
         "SwiftestLib",
         "FileWatcher",
