@@ -1,13 +1,12 @@
 public class Parser {
-  public init() {}
-
   public var summary: TestSummary? = nil
-
   public var outputType: OutputType = OutputType.undefined
 
-  public func parse(line: String, colored: Bool = true, additionalLines: @escaping () -> (String?))
-    -> String?
-  {
+  public func parse(
+    line: String,
+    colored: Bool = true,
+    additionalLines: @escaping () -> (String?)
+  ) -> String? {
     switch line {
       case Matcher.jaredMatcher:
         outputType = .error
@@ -323,7 +322,9 @@ public class Parser {
       testsCount: groups[0],
       failuresCount: groups[1],
       unexpectedCount: groups[2],
-      time: groups[3],
-      colored: colored)
+      time: groups[3]
+    )
   }
+
+  public init() {}
 }
