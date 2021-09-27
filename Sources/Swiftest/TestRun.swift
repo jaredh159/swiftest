@@ -40,6 +40,7 @@ struct TestRun {
 
     group.wait()
     if let summary = parser.summary {
+      // TODO, this sometimes prints NOT last...
       print(summary.format())
     }
   }

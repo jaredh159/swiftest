@@ -332,7 +332,7 @@ extension String {
         let testCase = groups[1]
         let time = groups[2]
         return indent + TestStatus.pass.rawValue.green + " " + testCase
-          + " (\(time.coloredTime()) seconds)"
+          + " (\(time.coloredTime()) seconds)".dim.white
       case .failingTest:
         let testCase = groups[2]
         let failingReason = groups[3]
@@ -486,8 +486,8 @@ extension String {
   private func coloredTime() -> String {
     guard let time = Double(self) else { return self }
     if time < 0.025 { return self }
-    if time < 0.100 { return self.yellow }
-    return self.red
+    if time < 0.100 { return self.bold.yellow }
+    return self.bold.red
   }
 
   private func formatPackageStart() -> String? {

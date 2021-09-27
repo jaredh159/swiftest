@@ -39,6 +39,7 @@ final class Swiftest: ParsableCommand {
     testTask?.cancel()
 
     testTask = DispatchWorkItem {
+      clearTerminal()
       TestRun().exec()
     }
 
@@ -48,9 +49,16 @@ final class Swiftest: ParsableCommand {
   }
 }
 
+private func clearTerminal() {
+  print("\u{001B}[2J\u{001B}[H")
+}
+
 // @TODOS
 // ...next...
 
+// option to not show invidiual tests
+// don't show individual tests when running more than one test
+// let through print() logging...
 // jest-style controls for isolating on the fly, re-running
 // parsing the lines of test output ala xcbeautify
 // getting test output from a handful of open source swift libraries
