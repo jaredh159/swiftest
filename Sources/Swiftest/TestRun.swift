@@ -11,7 +11,7 @@ struct TestRun {
 
     let test: Process = Process()
     test.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
-    test.arguments = ["test"]
+    test.arguments = ["test", "--filter", "testTestSuiteStartCreatesTestSuite"]
     test.currentDirectoryPath = FileManager.default.currentDirectoryPath
 
     let errPipe = Pipe()
@@ -20,16 +20,16 @@ struct TestRun {
     DispatchQueue.global(qos: .background).async {
       try? test.run()
 
-      var currentLineErr: String = ""
+      var currentLine: String = ""
       errPipe.fileHandleForReading.readabilityHandler = { pipe in
         if let line = String(data: pipe.availableData, encoding: .utf8) {
           // @TODO: this is NOT optimal...
           for char in line {
             if char == "\n" {
-              handleLine(currentLineErr)
-              currentLineErr = ""
+              handleLine(currentLine)
+              currentLine = ""
             } else {
-              currentLineErr += String(char)
+              currentLine += String(char)
             }
           }
         }
@@ -48,6 +48,7 @@ struct TestRun {
   func handleLine(_ line: String) {
     let formatted = parser.parse(line: line, colored: true, additionalLines: { nil })
     if let formatted = formatted {
+      // print(formatted)
       output.write(parser.outputType, formatted)
     }
   }

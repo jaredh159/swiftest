@@ -1,4 +1,5 @@
 struct Matcher {
+  static let tempAllow = Regex(pattern: .tempAllow)
   static let jaredMatcher = Regex(pattern: .jared)
   static let aggregateTargetMatcher = Regex(pattern: .aggregateTarget)
   static let analyzeMatcher = Regex(pattern: .analyze)
@@ -66,7 +67,6 @@ struct Matcher {
   static let testCasePassedMatcher = Regex(pattern: .testCasePassed)
   static let testCasePendingMatcher = Regex(pattern: .testCasePending)
   static let testCaseStartedMatcher = Regex(pattern: .testCaseStarted)
-  static let testSuiteStartMatcher = Regex(pattern: .testSuiteStart)
   static let testSuiteStartedMatcher = Regex(pattern: .testSuiteStarted)
   static let testsRunCompletionMatcher = Regex(pattern: .testsRunCompletion)
   static let tiffutilMatcher = Regex(pattern: .tiffutil)

@@ -56,6 +56,12 @@ private func clearTerminal() {
 // @TODOS
 // ...next...
 
+// basic idea:
+// capture all of the testing info, letting test results pass through
+// allow all other output...
+// EXCEPT for "noise", which should be suppressed, but configurable
+// ouput summary based on captured test
+
 // option to not show invidiual tests
 // don't show individual tests when running more than one test
 // let through print() logging...

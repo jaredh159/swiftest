@@ -1,5 +1,9 @@
 enum Pattern: String {
   /// Regular expression captured groups:
+  /// $1 = rest of log
+  case tempAllow = #"^JARED(.*)"#
+
+  /// Regular expression captured groups:
   /// $1 = file path
   /// $2 = filename
   case analyze =
@@ -121,15 +125,12 @@ enum Pattern: String {
 
   /// Regular expression captured groups:
   /// $1 = file
-  /// $2 = test suite
-  /// $3 = test case
-  /// $4 = reason
-  #if os(Linux)
-    case failingTest = #"\s*(.+:\d+):\serror:\s(.*)\.(.*)\s:(?:\s'.*'\s\[failed\],)?\s(.*)"#
-  #else
-    case failingTest =
-      #"\s*(.+:\d+):\serror:\s[\+\-]\[(.*)\s(.*)\]\s:(?:\s'.*'\s\[FAILED\],)?\s(.*)"#
-  #endif
+  /// $2 = column
+  /// $3 = test suite
+  /// $4 = test case
+  /// $5 = reason
+  /// @see https://regexr.com/66kho
+  case failingTest = #"\s*(.+):(\d+): error: (?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*)) : (.*)"#
 
   /// Regular expression captured groups:
   /// $1 = file
@@ -173,11 +174,9 @@ enum Pattern: String {
   /// $1 = suite
   /// $2 = test case
   /// $3 = time
-  #if os(Linux)
-    case testCasePassed = #"\s*Test Case\s'(.*)\.(.*)'\spassed\s\((\d*\.\d{1,3})\sseconds\)"#
-  #else
-    case testCasePassed = #"\s*Test Case\s'-\[(.*)\s(.*)\]'\spassed\s\((\d*\.\d{3})\sseconds\)."#
-  #endif
+  /// @see https://regexr.com/66kjh
+  case testCasePassed =
+    #"\s*Test Case '(?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*))' passed \((\d*\.\d{1,3}) seconds\)"#
 
   /// Regular expression captured groups:
   /// $1 = suite
@@ -284,25 +283,12 @@ enum Pattern: String {
   /// $1 = suite
   /// $2 = result
   /// $3 = time
-  #if os(Linux)
-    case testsRunCompletion = #"\s*Test Suite '(.*)' (finished|passed|failed) at (.*)"#
-  #else
-    case testsRunCompletion =
-      #"\s*Test Suite '(?:.*\/)?(.*[ox]ctest.*)' (finished|passed|failed) at (.*)"#
-  #endif
+  case testsRunCompletion = #"\s*Test Suite '(.*)' (finished|passed|failed) at (.*)\."#
 
   /// Regular expression captured groups:
   /// $1 = suite
   /// $2 = time
-  #if os(Linux)
-    case testSuiteStarted = #"\s*Test Suite '(.*)' started at(.*)"#
-  #else
-    case testSuiteStarted = #"\s*Test Suite '(?:.*\/)?(.*[ox]ctest.*)' started at(.*)"#
-  #endif
-
-  /// Regular expression captured groups:
-  /// $1 = test suite name
-  case testSuiteStart = #"\s*Test Suite '(.*)' started at"#
+  case testSuiteStarted = #"\s*Test Suite '(.*)' started at(.*)"#
 
   /// Regular expression captured groups:
   /// $1 = filename

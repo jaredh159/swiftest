@@ -2,10 +2,17 @@ import Foundation
 import Rainbow
 
 extension String {
+  // temp overload for now
+  func beautify(pattern: Pattern) -> String? {
+    return beautify(pattern: pattern, colored: true, additionalLines: { nil })
+  }
+
   func beautify(pattern: Pattern, colored: Bool, additionalLines: @escaping () -> (String?))
     -> String?
   {
     switch pattern {
+      case .tempAllow:
+        return self
       case .jared:
         return formatFatalError(pattern: pattern)
       case .analyze:
@@ -43,7 +50,6 @@ extension String {
           return formatLinking(pattern: pattern)
         #endif
       case .testSuiteStarted,
-        .testSuiteStart,
         .parallelTestingStarted,
         .parallelTestingPassed,
         .parallelTestingFailed,
@@ -305,8 +311,6 @@ extension String {
     let testSuite = groups[0]
 
     switch pattern {
-      case .testSuiteStart:
-        return testSuite.bold
       case .testSuiteStarted,
         .parallelTestSuiteStarted:
         let deviceDescription = pattern == .parallelTestSuiteStarted ? " on '\(groups[1])'" : ""

@@ -19,8 +19,20 @@ final class SwiftestPrettyTests: XCTestCase {
     XCTAssertEqual(parseLine(input), expected, file: file, line: line)
   }
 
+  @discardableResult
   private func parseLine(_ string: String) -> String? {
     return parser.parse(line: string, colored: false, additionalLines: { nil })
+  }
+
+  func testTestSuiteStartCreatesTestSuite() {
+    parseLine("Test Suite 'OutputHandlerTests' started at 2021-09-27 08:46:18.280")
+    let suite = parser.testSuites["OutputHandlerTests"]
+    XCTAssertNotNil(suite)
+    XCTAssertEqual(suite!.name, "OutputHandlerTests")
+
+    let df = DateFormatter()
+    df.dateFormat = "ss.SSS"
+    XCTAssertEqual(df.string(from: suite!.startedAt), "x18.280")
   }
 
   func testFatalErrorNew() throws {
