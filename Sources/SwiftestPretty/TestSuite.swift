@@ -37,17 +37,6 @@ final class TestSuite {
   }
 }
 
-struct TestCase {
-  enum Result {
-    case passed
-    case failed
-  }
-
-  let name: String
-  let result: Result
-  let runTime: Double
-}
-
 private final class Formatter {
   static let shared = Formatter()
   let dateFormatter = DateFormatter()

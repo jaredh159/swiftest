@@ -11,8 +11,6 @@ extension String {
     -> String?
   {
     switch pattern {
-      case .tempAllow:
-        return self
       case .jared:
         return formatFatalError(pattern: pattern)
       case .analyze:
@@ -58,10 +56,10 @@ extension String {
       case .failingTest,
         .uiFailingTest,
         .restartingTests,
-        .testCasePassed,
+        .testCaseFinished,
         .testCasePending,
         .testCaseMeasured,
-        .testsRunCompletion,
+        .testSuiteFinished,
         .parallelTestCasePassed,
         .parallelTestCaseAppKitPassed,
         .parallelTestCaseFailed:
@@ -332,9 +330,9 @@ extension String {
     let groups = capturedGroups(with: pattern)
 
     switch pattern {
-      case .testCasePassed:
+      case .testCaseFinished:
         let testCase = groups[1]
-        let time = groups[2]
+        let time = groups[3]
         return indent + TestStatus.pass.rawValue.green + " " + testCase
           + " (\(time.coloredTime()) seconds)".dim.white
       case .failingTest:
@@ -350,7 +348,7 @@ extension String {
       case .testCasePending:
         let testCase = groups[1]
         return indent + TestStatus.pending.rawValue.yellow + " " + testCase + " [PENDING]"
-      case .testsRunCompletion:
+      case .testSuiteFinished:
         return nil
       case .testCaseMeasured:
         let testCase = groups[1]

@@ -16,12 +16,12 @@ final class Swiftest: ParsableCommand {
   var watch = false
 
   func run() throws {
+    let cwd = FileManager.default.currentDirectoryPath
     if !watch {
       TestRun().exec()
       return
     }
 
-    let cwd = FileManager.default.currentDirectoryPath
     let filewatcher = FileWatcher(["\(cwd)/Sources", "\(cwd)/Tests"])
     filewatcher.queue = DispatchQueue.global()
     filewatcher.callback = { [weak self] event in
@@ -55,6 +55,10 @@ private func clearTerminal() {
 
 // @TODOS
 // ...next...
+
+// handle these lines..
+// `Swift/ContiguousArrayBuffer.swift:580: Fatal error: Index out of range`
+// `Exited with signal code 4`
 
 // basic idea:
 // capture all of the testing info, letting test results pass through

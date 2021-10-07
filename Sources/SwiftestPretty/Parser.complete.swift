@@ -9,9 +9,6 @@ public class ParserComplete {
     additionalLines: @escaping () -> (String?)
   ) -> String? {
     switch line {
-      case Matcher.tempAllow:
-        outputType = .result
-        return line
       case Matcher.jaredMatcher:
         outputType = .error
         return line.beautify(pattern: .jared, colored: colored, additionalLines: additionalLines)
@@ -114,10 +111,10 @@ public class ParserComplete {
       case Matcher.linkingMatcher:
         outputType = OutputType.task
         return line.beautify(pattern: .linking, colored: colored, additionalLines: additionalLines)
-      case Matcher.testCasePassedMatcher:
+      case Matcher.testCaseFinishedMatcher:
         outputType = OutputType.test
         return line.beautify(
-          pattern: .testCasePassed, colored: colored, additionalLines: additionalLines)
+          pattern: .testCaseFinished, colored: colored, additionalLines: additionalLines)
       case Matcher.testCaseStartedMatcher:
         outputType = OutputType.test
         return line.beautify(
@@ -157,10 +154,10 @@ public class ParserComplete {
         outputType = OutputType.task
         return line.beautify(
           pattern: .processInfoPlist, colored: colored, additionalLines: additionalLines)
-      case Matcher.testsRunCompletionMatcher:
+      case Matcher.testSuiteFinishedMatcher:
         outputType = OutputType.test
         return line.beautify(
-          pattern: .testsRunCompletion, colored: colored, additionalLines: additionalLines)
+          pattern: .testSuiteFinished, colored: colored, additionalLines: additionalLines)
 
       case Matcher.testSuiteStartedMatcher:
         outputType = .test
@@ -185,7 +182,7 @@ public class ParserComplete {
         outputType = OutputType.task
         return line.beautify(
           pattern: .writeAuxiliaryFiles, colored: colored, additionalLines: additionalLines)
-      case Matcher.parallelTestCasePassedMatcher:
+      case Matcher.paralleltestCaseFinishedMatcher:
         outputType = OutputType.test
         return line.beautify(
           pattern: .parallelTestCasePassed, colored: colored, additionalLines: additionalLines)

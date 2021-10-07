@@ -9,12 +9,12 @@ final class PatternTests: XCTestCase {
     assertCaptured(.executed, line, ["85", "0", "0", "0.039"])
   }
 
-  func testPassingTestMacAndLinux() throws {
+  func testPassingTestMacAndLinux_Isolate() throws {
     let macOS = #"Test Case '-[FooTests.FooTests testFoobar]' passed (0.007 seconds)."#
-    assertCaptured(.testCasePassed, macOS, ["FooTests", "testFoobar", "0.007"])
+    assertCaptured(.testCaseFinished, macOS, ["FooTests", "testFoobar", "passed", "0.007"])
 
     let linux = #"Test Case 'FooTests.testFoobar' passed (0.342 seconds)"#
-    assertCaptured(.testCasePassed, linux, ["FooTests", "testFoobar", "0.342"])
+    assertCaptured(.testCaseFinished, linux, ["FooTests", "testFoobar", "passed", "0.342"])
   }
 
   func testFailingTest() throws {

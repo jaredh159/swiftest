@@ -2,8 +2,12 @@ import Foundation
 import SwiftestPretty
 
 struct TestRun {
-  let parser = Parser()
+  let parser: Parser
   let output = OutputHandler(quiet: false, quieter: false, isCI: false, { print($0) })
+
+  init(cwd: String? = nil) {
+    parser = Parser(cwd: cwd ?? FileManager.default.currentDirectoryPath)
+  }
 
   func exec() {
     let group = DispatchGroup()
@@ -11,8 +15,8 @@ struct TestRun {
 
     let test: Process = Process()
     test.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
-    test.arguments = ["test", "--filter", "testTestSuiteStartCreatesTestSuite"]
-    test.currentDirectoryPath = FileManager.default.currentDirectoryPath
+    test.arguments = ["test", "--filter", "Isolate"]
+    test.currentDirectoryPath = parser.cwd
 
     let errPipe = Pipe()
     test.standardError = errPipe

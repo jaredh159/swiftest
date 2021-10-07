@@ -1,18 +1,71 @@
 enum Pattern: String {
+
   /// Regular expression captured groups:
-  /// $1 = rest of log
-  case tempAllow = #"^JARED(.*)"#
+  /// $1 = file
+  /// $2 = column
+  /// $3 = test suite
+  /// $4 = test case
+  /// $5 = reason
+  /// @see https://regexr.com/66kho
+  case failingTest = #"\s*(.+):(\d+): error: (?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*)) : (.*)"#
+
+  /// Regular expression captured groups:
+  /// $1 = suite
+  /// $2 = test case
+  /// $3 = time
+  /// @see https://regexr.com/66kjh
+  case testCaseFinished =
+    #"\s*Test Case '(?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*))' (passed|failed) \((\d*\.\d{1,3}) seconds\)"#
+
+  /// Regular expression captured groups:
+  /// $1 = suite
+  /// $2 = time
+  case testSuiteStarted = #"\s*Test Suite '(.*)' started at(.*)"#
+
+  /// Regular expression captured groups:
+  /// $1 = suite
+  /// $2 = result
+  /// $3 = time
+  case testSuiteFinished = #"\s*Test Suite '(.*)' (finished|passed|failed) at (.*)\."#
+
+  /// Regular expression captured groups:
+  /// $1 = line+file
+  /// $2 = message
+  case jared = #"(.*:\d*): Fatal error: (.*)$"#
+
+  /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  NON-TEST BELOW HERE
+  */
 
   /// Regular expression captured groups:
   /// $1 = file path
   /// $2 = filename
   case analyze =
     #"Analyze(?:Shallow)?\s(.*\/(.*\.(?:m|mm|cc|cpp|c|cxx)))\s.*\((in target: (.*)|in target '(.*)' from project '.*')\)"#
-
-  /// Regular expression captured groups:
-  /// $1 = line+file
-  /// $2 = message
-  case jared = #"(.*:\d*): Fatal error: (.*)$"#
 
   /// Regular expression captured groups:
   /// $1 = target
@@ -125,15 +178,6 @@ enum Pattern: String {
 
   /// Regular expression captured groups:
   /// $1 = file
-  /// $2 = column
-  /// $3 = test suite
-  /// $4 = test case
-  /// $5 = reason
-  /// @see https://regexr.com/66kho
-  case failingTest = #"\s*(.+):(\d+): error: (?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*)) : (.*)"#
-
-  /// Regular expression captured groups:
-  /// $1 = file
   /// $2 = reason
   case uiFailingTest = #"\s{4}t = \s+\d+\.\d+s\s+Assertion Failure: (.*:\d+): (.*)$"#
 
@@ -169,14 +213,6 @@ enum Pattern: String {
     case linking =
       #"Ld \/?.*\/(.*?) normal .* \((in target: (.*)|in target '(.*)' from project '.*')\)"#
   #endif
-
-  /// Regular expression captured groups:
-  /// $1 = suite
-  /// $2 = test case
-  /// $3 = time
-  /// @see https://regexr.com/66kjh
-  case testCasePassed =
-    #"\s*Test Case '(?:[\+\-]\[(?:[^.]+)\.(.*) (.*)\]|(.+)\.(.*))' passed \((\d*\.\d{1,3}) seconds\)"#
 
   /// Regular expression captured groups:
   /// $1 = suite
@@ -278,17 +314,6 @@ enum Pattern: String {
   /// $4 = target
   case processInfoPlist =
     #"ProcessInfoPlistFile\s.*\.plist\s(.*\/+(.*\.plist))( \((in target: (.*)|in target '(.*)' from project '.*')\))?"#
-
-  /// Regular expression captured groups:
-  /// $1 = suite
-  /// $2 = result
-  /// $3 = time
-  case testsRunCompletion = #"\s*Test Suite '(.*)' (finished|passed|failed) at (.*)\."#
-
-  /// Regular expression captured groups:
-  /// $1 = suite
-  /// $2 = time
-  case testSuiteStarted = #"\s*Test Suite '(.*)' started at(.*)"#
 
   /// Regular expression captured groups:
   /// $1 = filename

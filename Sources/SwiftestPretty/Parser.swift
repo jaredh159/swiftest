@@ -1,6 +1,10 @@
 public class Parser {
+  typealias SuiteName = String
+  public var cwd: String
   public var summary: TestSummary? = nil
-  var testSuites: [String: TestSuite] = [:]
+
+  var testSuites: [SuiteName: TestSuite] = [:]
+  var testCaseFailures: [SuiteName: [TestCase.Failure]] = [:]
 
   // temp remove ... or not ???
   public var outputType: OutputType = OutputType.undefined
@@ -21,8 +25,8 @@ public class Parser {
         outputType = .test
         return line.beautify(pattern: .testSuiteStarted)
 
-      case Matcher.testsRunCompletionMatcher:
-        let groups = line.capturedGroups(with: .testsRunCompletion)
+      case Matcher.testSuiteFinishedMatcher:
+        let groups = line.capturedGroups(with: .testSuiteFinished)
         let (suiteName, status, endedAt) = (groups[0], groups[1], groups[2])
         guard !isMetaSuite(suiteName) else {
           return nil
@@ -35,19 +39,48 @@ public class Parser {
 
       case Matcher.failingTestMatcher:
         let groups = line.capturedGroups(with: .failingTest)
-        let (file, suite, name, reason) = (groups[0], groups[1], groups[2], groups[3])
-        print(file, suite, name, reason)
-        return line
+        let (path, col, suite, name, msg) = (groups[0], groups[1], groups[2], groups[3], groups[4])
+        var relPath = path
+        if path.hasPrefix(cwd + "/") {
+          relPath = String(relPath.dropFirst(cwd.count + 1))
+        }
 
-      case Matcher.testCasePassedMatcher:
-        let groups = line.capturedGroups(with: .testCasePassed)
-        let (suite, name, time) = (groups[0], groups[1], groups[2])
-        guard let suite = testSuites[suite] else {
+        let failure = TestCase.Failure(
+          absolutePath: path,
+          relativePath: relPath,
+          columnNumber: Int(col)!,
+          testName: name,
+          message: msg
+        )
+
+        if testCaseFailures[suite] == nil {
+          testCaseFailures[suite] = [failure]
+        } else {
+          testCaseFailures[suite]!.append(failure)
+        }
+
+        return failure.output()
+
+      case Matcher.testCaseFinishedMatcher:
+        let groups = line.capturedGroups(with: .testCaseFinished)
+        let (suiteName, name, status, time) = (groups[0], groups[1], groups[2], groups[3])
+        guard let suite = testSuites[suiteName] else {
           return nil
         }
         outputType = .test
-        suite.cases.append(TestCase(name: name, result: .passed, runTime: Double(time)!))
-        return line.beautify(pattern: .testCasePassed)
+
+        let result: TestCase.Result
+        if status == "passed" {
+          result = .passed
+        } else {
+          let failures = testCaseFailures[suiteName] ?? []
+          result = .failed(failures)
+        }
+
+        suite.cases.append(TestCase(name: name, result: result, runTime: Double(time)!))
+        return line.beautify(pattern: .testCaseFinished)
+
+      // case Matcher.testCase
 
       case Matcher.executedMatcher, Matcher.testCaseStartedMatcher:
         return nil
@@ -74,5 +107,7 @@ public class Parser {
     )
   }
 
-  public init() {}
+  public init(cwd: String) {
+    self.cwd = cwd
+  }
 }
