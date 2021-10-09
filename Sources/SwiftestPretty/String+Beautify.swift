@@ -11,7 +11,7 @@ extension String {
     -> String?
   {
     switch pattern {
-      case .jared:
+      case .fatalError:
         return formatFatalError(pattern: pattern)
       case .analyze:
         return formatAnalyze(pattern: pattern)
@@ -114,7 +114,6 @@ extension String {
       case .willNotBeCodeSigned:
         return formatWillNotBeCodesignWarning(pattern: pattern)
       case .clangError,
-        .fatalError,
         .ldError,
         .podsError,
         .moduleIncludesError:

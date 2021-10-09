@@ -1,5 +1,5 @@
 struct Matcher {
-  static let jaredMatcher = Regex(pattern: .jared)
+  static let jaredMatcher = Regex(pattern: .fatalError)
   static let aggregateTargetMatcher = Regex(pattern: .aggregateTarget)
   static let analyzeMatcher = Regex(pattern: .analyze)
   static let analyzeTargetMatcher = Regex(pattern: .analyzeTarget)

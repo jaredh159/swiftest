@@ -9,9 +9,10 @@ public class ParserComplete {
     additionalLines: @escaping () -> (String?)
   ) -> String? {
     switch line {
-      case Matcher.jaredMatcher:
+      case Matcher.fatalErrorMatcher:
         outputType = .error
-        return line.beautify(pattern: .jared, colored: colored, additionalLines: additionalLines)
+        return line.beautify(
+          pattern: .fatalError, colored: colored, additionalLines: additionalLines)
       case Matcher.analyzeMatcher:
         outputType = OutputType.task
         return line.beautify(pattern: .analyze, colored: colored, additionalLines: additionalLines)

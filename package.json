@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "watchexec --restart --watch Sources --exts swift --signal SIGINT swift build",
-    "format": "swift-format-5.3 --configuration ./.swift-format.json --recursive --in-place ./Sources ./Tests ./Package.swift",
+    "format": "swift-format-5.5 --configuration ./.swift-format.json --recursive --in-place ./Sources ./Tests ./Package.swift",
     "test": "swift test 2>&1 | xcbeautify",
     "test:isolate": "swift test --filter Isolate 2>&1 | xcbeautify",
     "test:clear": "clear && printf '\\e[3J' && npm run test; echo",

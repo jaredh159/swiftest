@@ -56,9 +56,16 @@ private func clearTerminal() {
 // @TODOS
 // ...next...
 
-// handle these lines..
+// test these lines, clean up fatal error tests, deal with failing tests
 // `Swift/ContiguousArrayBuffer.swift:580: Fatal error: Index out of range`
 // `Exited with signal code 4`
+
+// then...
+// basic jest style watch mode controls
+
+// rebuilder?
+
+// config?
 
 // basic idea:
 // capture all of the testing info, letting test results pass through

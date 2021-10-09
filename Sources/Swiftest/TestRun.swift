@@ -15,7 +15,7 @@ struct TestRun {
 
     let test: Process = Process()
     test.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
-    test.arguments = ["test", "--filter", "Isolate"]
+    test.arguments = ["test"]  //, "--filter", "PatternTests"]
     test.currentDirectoryPath = parser.cwd
 
     let errPipe = Pipe()

@@ -31,7 +31,7 @@ enum Pattern: String {
   /// Regular expression captured groups:
   /// $1 = line+file
   /// $2 = message
-  case jared = #"(.*:\d*): Fatal error: (.*)$"#
+  case fatalError = #"(.*:\d*): Fatal error: (.*)$"#
 
   /*
 
@@ -380,11 +380,6 @@ enum Pattern: String {
   /// Regular expression captured groups:
   /// $1 = cursor (with whitespaces and tildes)
   case cursor = #"([\s~]*\^[\s~]*)$"#
-
-  /// Regular expression captured groups:
-  /// $1 = whole error.
-  /// it varies a lot, not sure if it makes sense to catch everything separately
-  case fatalError = #"(fatal error:.*)$"#
 
   /// Regular expression captured groups:
   /// $1 = whole error.
