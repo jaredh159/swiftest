@@ -78,7 +78,7 @@ public class Parser {
         }
 
         suite.cases.append(TestCase(name: name, result: result, runTime: Double(time)!))
-        return line.beautify(pattern: .testCaseFinished)
+        return result == .passed ? line.beautify(pattern: .testCaseFinished) : nil
 
       // case Matcher.testCase
 

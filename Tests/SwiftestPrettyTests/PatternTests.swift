@@ -47,7 +47,8 @@ final class PatternTests: XCTestCase {
       ])
   }
 
-  func testFatalErrorNew() throws {
+  func testFatalError_Isolate() throws {
+    assertCaptured(.exit, "Exited with signal code 4", ["4"])
     assertCaptured(
       .fatalError,
       "swiftestTests/swiftestTests.swift:9: Fatal error: Unexpectedly found nil while unwrapping an Optional value",
@@ -55,6 +56,12 @@ final class PatternTests: XCTestCase {
         "swiftestTests/swiftestTests.swift:9",
         "Unexpectedly found nil while unwrapping an Optional value",
       ]
+    )
+
+    assertCaptured(
+      .fatalError,
+      "Swift/ContiguousArrayBuffer.swift:580: Fatal error: Index out of range",
+      ["Swift/ContiguousArrayBuffer.swift:580", "Index out of range"]
     )
   }
 

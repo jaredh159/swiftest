@@ -33,6 +33,9 @@ enum Pattern: String {
   /// $2 = message
   case fatalError = #"(.*:\d*): Fatal error: (.*)$"#
 
+  /// Regular expression captured groups:
+  /// $1 = exit code
+  case exit = #"Exited with signal code (\d+)$"#
   /*
 
 

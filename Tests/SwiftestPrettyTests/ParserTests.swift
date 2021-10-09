@@ -3,7 +3,7 @@ import XCTest
 
 @testable import SwiftestPretty
 
-final class SwiftestPrettyTests: XCTestCase {
+final class ParserTests: XCTestCase {
   var parser = Parser(cwd: "/test/cwd")
 
   override class func setUp() {
@@ -69,9 +69,4 @@ final class SwiftestPrettyTests: XCTestCase {
       TestCase(name: "testFoo", result: .failed([failure]), runTime: 0.007)
     )
   }
-
-  // below here, probably delete or move these into tests asserting that
-  // they are matched correctly, and capture the right capture groups
-  // but most of these lines will be discarded
-
 }

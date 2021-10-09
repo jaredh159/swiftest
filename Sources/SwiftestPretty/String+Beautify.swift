@@ -7,10 +7,15 @@ extension String {
     return beautify(pattern: pattern, colored: true, additionalLines: { nil })
   }
 
-  func beautify(pattern: Pattern, colored: Bool, additionalLines: @escaping () -> (String?))
-    -> String?
-  {
+  func beautify(
+    pattern: Pattern,
+    colored: Bool,
+    additionalLines: @escaping () -> (String?)
+  ) -> String? {
     switch pattern {
+      case .exit:
+        let groups = capturedGroups(with: pattern)
+        return "\("Exited with signal code".red) \(groups[0].white.onRed)"
       case .fatalError:
         return formatFatalError(pattern: pattern)
       case .analyze:
