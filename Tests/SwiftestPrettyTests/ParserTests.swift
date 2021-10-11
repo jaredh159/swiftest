@@ -6,28 +6,6 @@ import XCTest
 final class ParserTests: XCTestCase {
   var parser = Parser(cwd: "/test/cwd")
 
-  override class func setUp() {
-    Rainbow.enabled = false
-  }
-
-  override func setUp() {
-    parser = Parser(cwd: "/test/cwd")
-  }
-
-  private func assertParsed(
-    _ input: String,
-    _ expected: String,
-    file: StaticString = #filePath,
-    line: UInt = #line
-  ) {
-    XCTAssertEqual(parseLine(input), expected, file: file, line: line)
-  }
-
-  @discardableResult
-  private func parseLine(_ string: String) -> String? {
-    return parser.parse(line: string, colored: false, additionalLines: { nil })
-  }
-
   func testTestSuiteStartCreatesTestSuite() throws {
     parseLine("Test Suite 'OutputHandlerTests' started at 2021-09-27 08:46:18.280")
     let suite = parser.testSuites["OutputHandlerTests"]
@@ -68,5 +46,27 @@ final class ParserTests: XCTestCase {
       suite.cases[0],
       TestCase(name: "testFoo", result: .failed([failure]), runTime: 0.007)
     )
+  }
+
+  override class func setUp() {
+    Rainbow.enabled = false
+  }
+
+  override func setUp() {
+    parser = Parser(cwd: "/test/cwd")
+  }
+
+  private func assertParsed(
+    _ input: String,
+    _ expected: String,
+    file: StaticString = #filePath,
+    line: UInt = #line
+  ) {
+    XCTAssertEqual(parseLine(input), expected, file: file, line: line)
+  }
+
+  @discardableResult
+  private func parseLine(_ string: String) -> String? {
+    return parser.parse(line: string, colored: false, additionalLines: { nil })
   }
 }

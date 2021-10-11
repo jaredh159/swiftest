@@ -1,25 +1,36 @@
+import Foundation
+
 public struct TestSummary {
-  let testsCount: String
-  let failuresCount: String
-  let unexpectedCount: String
-  let time: String
+  let testsCount: Int
+  let failuresCount: Int
+  let unexpectedCount: Int
+  let time: Double
 }
 
 extension TestSummary {
-  func isSuccess() -> Bool {
-    guard let failures = Int(failuresCount) else { return false }
-    return failures == 0
+  var isSuccess: Bool {
+    failuresCount == 0
   }
 
   var description: String {
-    return "\(failuresCount) failed, \(testsCount) total (\(time) seconds)"
+    return "\(failuresCount) failed, \(testsCount) total (\(time.pretty) seconds)"
   }
 
   public func format() -> String {
-    if isSuccess() {
+    if isSuccess {
       return "Tests Passed: \(description)".bold.green
     } else {
       return "Tests Failed: \(description)".bold.red
     }
+  }
+}
+
+extension Double {
+  var pretty: String {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.minimumFractionDigits = 3
+    formatter.maximumFractionDigits = 4
+    return formatter.string(from: NSNumber(value: self))!
   }
 }

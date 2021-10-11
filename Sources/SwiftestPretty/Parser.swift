@@ -1,7 +1,8 @@
+import Foundation
+
 public class Parser {
   typealias SuiteName = String
   public var cwd: String
-  public var summary: TestSummary? = nil
 
   var testSuites: [SuiteName: TestSuite] = [:]
   var testCaseFailures: [SuiteName: [TestCase.Failure]] = [:]
@@ -80,8 +81,6 @@ public class Parser {
         suite.cases.append(TestCase(name: name, result: result, runTime: Double(time)!))
         return result == .passed ? line.beautify(pattern: .testCaseFinished) : nil
 
-      // case Matcher.testCase
-
       case Matcher.executedMatcher, Matcher.testCaseStartedMatcher:
         return nil
 
@@ -96,18 +95,43 @@ public class Parser {
       || suiteName.hasSuffix(".xctest")
   }
 
-  func parseSummary(line: String, colored: Bool) {
-    print(testSuites)
-    let groups = line.capturedGroups(with: .executed)
-    summary = TestSummary(
-      testsCount: groups[0],
-      failuresCount: groups[1],
-      unexpectedCount: groups[2],
-      time: groups[3]
-    )
-  }
-
   public init(cwd: String) {
     self.cwd = cwd
   }
+
+  public var summary: TestSummary? {
+    var earliestStart: Date? = nil
+    var latestEnd: Date? = nil
+    var testsCount = 0
+    var failuresCount = 0
+
+    for (_, suite) in testSuites {
+      if earliestStart == nil || suite.startedAt < earliestStart! {
+        earliestStart = suite.startedAt
+      }
+
+      testsCount += suite.testsCount
+      failuresCount += suite.failuresCount
+
+      guard let endedAt = suite.endedAt else {
+        continue
+      }
+
+      if latestEnd == nil || endedAt < latestEnd! {
+        latestEnd = endedAt
+      }
+    }
+
+    guard let start = earliestStart, let end = latestEnd, end > start else {
+      return nil
+    }
+
+    return TestSummary(
+      testsCount: testsCount,
+      failuresCount: failuresCount,
+      unexpectedCount: 0,  // TODO
+      time: Double(end.timeIntervalSinceReferenceDate - start.timeIntervalSinceReferenceDate)
+    )
+  }
+
 }

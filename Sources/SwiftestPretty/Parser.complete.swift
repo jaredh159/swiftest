@@ -321,13 +321,13 @@ public class ParserComplete {
   }
 
   func parseSummary(line: String, colored: Bool) {
-    let groups = line.capturedGroups(with: .executed)
-    summary = TestSummary(
-      testsCount: groups[0],
-      failuresCount: groups[1],
-      unexpectedCount: groups[2],
-      time: groups[3]
-    )
+    // let groups = line.capturedGroups(with: .executed)
+    // summary = TestSummary(
+    //   testsCount: groups[0],
+    //   failuresCount: groups[1],
+    //   unexpectedCount: groups[2],
+    //   time: groups[3]
+    // )
   }
 
   public init() {}

@@ -26,6 +26,9 @@ final class TestSuite {
   var endedAt: Date?
   var cases: [TestCase] = []
 
+  var testsCount: Int { cases.count }
+  var failuresCount: Int { cases.filter { $0.result != .passed }.count }
+
   init(_ name: String, startedAt: String) {
     self.name = name
     self.startedAt = Formatter.shared.convert(startedAt)
