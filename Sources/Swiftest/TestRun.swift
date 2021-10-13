@@ -2,11 +2,13 @@ import Foundation
 import SwiftestPretty
 
 struct TestRun {
+  var filter: String? = nil
   let parser: Parser
   let output = OutputHandler(quiet: false, quieter: false, isCI: false, { print($0) })
 
-  init(cwd: String? = nil) {
+  init(cwd: String? = nil, filter: String? = nil) {
     parser = Parser(cwd: cwd ?? FileManager.default.currentDirectoryPath)
+    self.filter = filter
   }
 
   func exec() {
@@ -17,6 +19,9 @@ struct TestRun {
     test.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
     // test.arguments = ["test", "--filter", "Isolate"]
     test.arguments = ["test"]
+    if let filter = filter {
+      test.arguments! += ["--filter", filter]
+    }
     test.currentDirectoryPath = parser.cwd
 
     let errPipe = Pipe()
