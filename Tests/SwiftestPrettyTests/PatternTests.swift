@@ -9,6 +9,14 @@ final class PatternTests: XCTestCase {
     assertCaptured(.executed, line, ["85", "0", "0", "0.039"])
   }
 
+  func testTestSuiteFinished() throws {
+    assertCaptured(
+      .testSuiteFinished,
+      "Test Suite 'PatternTests' passed at 2021-10-15 08:12:43.680.",
+      ["PatternTests", "passed", "2021-10-15 08:12:43.680"]
+    )
+  }
+
   func testPassingTestMacAndLinux() throws {
     let macOS = #"Test Case '-[FooTests.FooTests testFoobar]' passed (0.007 seconds)."#
     assertCaptured(.testCaseFinished, macOS, ["FooTests", "testFoobar", "passed", "0.007"])

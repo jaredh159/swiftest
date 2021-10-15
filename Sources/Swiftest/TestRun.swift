@@ -11,13 +11,13 @@ struct TestRun {
     self.filter = filter
   }
 
-  func exec() {
+  func exec(onComplete: ((TestSummary?) -> Void)? = nil) {
     let group = DispatchGroup()
     group.enter()
 
     let test: Process = Process()
+    test.environment = ["SWIFT_DETERMINISTIC_HASHING": "1"]  // @TODO configurable
     test.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
-    // test.arguments = ["test", "--filter", "Isolate"]
     test.arguments = ["test"]
     if let filter = filter {
       test.arguments! += ["--filter", filter]
@@ -27,7 +27,7 @@ struct TestRun {
     let errPipe = Pipe()
     test.standardError = errPipe
 
-    DispatchQueue.global(qos: .background).async {
+    DispatchQueue.global(qos: .default).async {
       try? test.run()
 
       var currentLine: String = ""
@@ -46,19 +46,24 @@ struct TestRun {
       }
       test.waitUntilExit()
       group.leave()
+
     }
 
     group.wait()
     if let summary = parser.summary {
-      // TODO, this sometimes prints NOT last...
-      print(summary.format())
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        print(summary.format())
+      }
+    }
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+      onComplete?(parser.summary)
     }
   }
 
   func handleLine(_ line: String) {
     let formatted = parser.parse(line: line, colored: true, additionalLines: { nil })
     if let formatted = formatted {
-      // print(formatted)
       output.write(parser.outputType, formatted)
     }
   }

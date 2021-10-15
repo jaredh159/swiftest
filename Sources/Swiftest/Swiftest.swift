@@ -8,8 +8,6 @@ private var originalTerm: termios?
 
 final class Swiftest: ParsableCommand {
 
-  private var filter: String? = nil
-
   static var configurations = CommandConfiguration(
     abstract: "A utility for testing Swift projects",
     version: "1.0.0"
@@ -18,10 +16,13 @@ final class Swiftest: ParsableCommand {
   @Flag(name: .shortAndLong, help: "watch cwd for file changes and re-run tests")
   var watch = false
 
+  @Option(name: .shortAndLong, help: "filter tests by pattern")
+  var filter: String?
+
   func run() throws {
     let cwd = FileManager.default.currentDirectoryPath
     if !watch {
-      TestRun().exec()
+      TestRun(filter: filter).exec()
       return
     }
 
@@ -34,69 +35,75 @@ final class Swiftest: ParsableCommand {
     }
     filewatcher.start()
 
-    runWatchModeTests(clearingFirst: false)
-
-    enableRawMode()
-
-    var char: UInt8 = 0
-    while read(FileHandle.standardInput.fileDescriptor, &char, 1) == 1 {
-      switch char {
-        case "w":
-          print("\r\("Watch Usage".bold)                          ")
-          printWatchUsageLine("f", "to filter by a test name or suite name")
-          printWatchUsageLine("q", "to quit watch mode")
-          if filter != nil {
-            printWatchUsageLine("Esc", "to exit filter mode")
-          }
-          printWatchUsageLine("Enter", "to trigger a test run")
-        case "f":
-          print("filter")
-          clearTerminal()
-          restoreRawMode()
-          print("\nFilter Mode Usage".bold)
-          printWatchUsageLine("Esc", "to exit filter mode")
-          printWatchUsageLine("Enter", "to filter by a pattern")
-          print("\n pattern > ".dim, terminator: "")
-          fflush(stdout)
-          filter = readLine()
-          enableRawMode()
-          runWatchModeTests(with: filter, clearingFirst: true)
-        case "q":
-          restoreRawMode()
-          print("")
-          Self.exit()
-        case ENTER_KEY:
-          runWatchModeTests(with: filter, clearingFirst: true)
-        case ESC_KEY:
-          filter = nil
-          runWatchModeTests(clearingFirst: true)
-        default:
-          break
-      }
-    }
+    runWatchModeTests(with: filter, clearingFirst: false)
 
     dispatchMain()
   }
 
-  private func printWatchUsageLine(_ key: String, _ desc: String) {
-    print(" > Press".dim, key, desc.dim)
+  private func waitForUserInput() {
+    enableRawMode()
+    DispatchQueue.global(qos: .background).async { [weak self] in
+
+      var char: UInt8 = 0
+      let stdIn = FileHandle.standardInput
+      while read(stdIn.fileDescriptor, &char, 1) == 1 {
+        switch char {
+          case "w":
+            print("\r\("Watch Usage".bold)                          ")
+            printWatchUsageLine("f", "to filter by a test name or suite name")
+            printWatchUsageLine("q", "to quit watch mode")
+            if self?.filter != nil {
+              printWatchUsageLine("Esc", "to exit filter mode")
+            }
+            printWatchUsageLine("Enter", "to trigger a test run")
+          case "f":
+            print("filter")
+            clearTerminal()
+            restoreRawMode()
+            print("\nFilter Mode Usage".bold)
+            printWatchUsageLine("Esc", "to exit filter mode")
+            printWatchUsageLine("Enter", "to filter by a pattern")
+            print("\n pattern > ".dim, terminator: "")
+            fflush(stdout)
+            self?.filter = readLine()
+            enableRawMode()
+            self?.runWatchModeTests(with: self?.filter, clearingFirst: true)
+          case "q":
+            restoreRawMode()
+            print("")
+            Self.exit()
+          case ENTER_KEY:
+            self?.runWatchModeTests(with: self?.filter, clearingFirst: true)
+          case ESC_KEY:
+            self?.filter = nil
+            self?.runWatchModeTests(clearingFirst: true)
+          default:
+            break
+        }
+      }
+    }
   }
 
   private func debouncedTest() {
     testTask?.cancel()
-    testTask = DispatchWorkItem { runWatchModeTests(clearingFirst: true) }
+    testTask = DispatchWorkItem { [weak self] in
+      self?.runWatchModeTests(with: self?.filter, clearingFirst: true)
+    }
     if let task = testTask {
       DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: task)
     }
   }
-}
 
-private func runWatchModeTests(with filter: String? = nil, clearingFirst: Bool = false) {
-  if clearingFirst {
-    clearTerminal()
+  private func runWatchModeTests(with filter: String? = nil, clearingFirst: Bool = false) {
+    restoreRawMode()
+    if clearingFirst {
+      clearTerminal()
+    }
+    TestRun(filter: filter).exec { [self] _ in
+      printWatchUsagePrompt()
+      self.waitForUserInput()
+    }
   }
-  TestRun(filter: filter).exec()
-  printWatchUsagePrompt()
 }
 
 // https://stackoverflow.com/questions/49748507/listening-to-stdin-in-swift
@@ -112,7 +119,9 @@ private func enableRawMode() {
   var raw: termios = initStruct()
   tcgetattr(stdin.fileDescriptor, &raw)
 
-  originalTerm = raw
+  if originalTerm == nil {
+    originalTerm = raw
+  }
 
   raw.c_lflag &= ~(UInt(ECHO | ICANON))
   tcsetattr(stdin.fileDescriptor, TCSAFLUSH, &raw)
@@ -142,6 +151,10 @@ extension UInt8 {
   }
 }
 
+private func printWatchUsageLine(_ key: String, _ desc: String) {
+  print(" > Press".dim, key, desc.dim)
+}
+
 func ~= (lhs: String, rhs: UInt8) -> Bool {
   guard let uint8 = Character(lhs).asciiValue else {
     return false
@@ -151,8 +164,6 @@ func ~= (lhs: String, rhs: UInt8) -> Bool {
 
 // @TODOS
 // ...next...
-
-// --filter/-f cli arg for init-ing with filter
 
 // maybe reformat outputsummary to be more like jest:
 /*
@@ -169,16 +180,8 @@ func ~= (lhs: String, rhs: UInt8) -> Bool {
 
 // config?
 
-// basic idea:
-// capture all of the testing info, letting test results pass through
-// allow all other output...
-// EXCEPT for "noise", which should be suppressed, but configurable
-// ouput summary based on captured test
-
 // option to not show invidiual tests
 // don't show individual tests when running more than one test
-// let through print() logging...
-// jest-style controls for isolating on the fly, re-running
 // parsing the lines of test output ala xcbeautify
 // getting test output from a handful of open source swift libraries
 // configuration, yaml decodable, with `st init` to generate one

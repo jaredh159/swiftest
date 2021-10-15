@@ -48,6 +48,26 @@ final class ParserTests: XCTestCase {
     )
   }
 
+  func testFilteredOutput() throws {
+    parse(
+      """
+      Test Suite 'Selected tests' started at 2021-10-15 08:12:43.676
+      Test Suite 'SwiftestPackageTests.xctest' started at 2021-10-15 08:12:43.676
+      Test Suite 'PatternTests' started at 2021-10-15 08:12:43.676
+      Test Case '-[SwiftestPrettyTests.PatternTests testTouch]' started.
+      Test Case '-[SwiftestPrettyTests.PatternTests testTouch]' passed (0.004 seconds).
+      Test Suite 'PatternTests' passed at 2021-10-15 08:12:43.680.
+               Executed 1 test, with 0 failures (0 unexpected) in 0.004 (0.004) seconds
+      Test Suite 'SwiftestPackageTests.xctest' passed at 2021-10-15 08:12:43.680.
+               Executed 1 test, with 0 failures (0 unexpected) in 0.004 (0.004) seconds
+      Test Suite 'Selected tests' passed at 2021-10-15 08:12:43.680.
+               Executed 1 test, with 0 failures (0 unexpected) in 0.004 (0.004) seconds 
+      """
+    )
+    XCTAssertNotNil(parser.summary)
+    XCTAssertEqual(parser.testSuites.count, 1)
+  }
+
   override class func setUp() {
     Rainbow.enabled = false
   }
@@ -68,5 +88,15 @@ final class ParserTests: XCTestCase {
   @discardableResult
   private func parseLine(_ string: String) -> String? {
     return parser.parse(line: string, colored: false, additionalLines: { nil })
+  }
+
+  @discardableResult
+  private func parse(_ lines: [String]) -> [String?] {
+    return lines.map(parseLine)
+  }
+
+  @discardableResult
+  private func parse(_ block: String) -> [String?] {
+    parse(block.split(separator: "\n").map(String.init))
   }
 }

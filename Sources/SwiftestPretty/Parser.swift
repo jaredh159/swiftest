@@ -24,7 +24,8 @@ public class Parser {
         }
         testSuites[suiteName] = TestSuite(suiteName, startedAt: startedAt)
         outputType = .test
-        return line.beautify(pattern: .testSuiteStarted)
+        let isFirst = testSuites.count == 1
+        return "\(isFirst ? "\n" : "")\(line.beautify(pattern: .testSuiteStarted) ?? "")"
 
       case Matcher.testSuiteFinishedMatcher:
         let groups = line.capturedGroups(with: .testSuiteFinished)
@@ -122,9 +123,11 @@ public class Parser {
       }
     }
 
-    guard let start = earliestStart, let end = latestEnd, end > start else {
+    guard let start = earliestStart else {
       return nil
     }
+
+    let end = latestEnd ?? Date()
 
     return TestSummary(
       testsCount: testsCount,

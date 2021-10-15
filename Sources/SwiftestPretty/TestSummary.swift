@@ -18,9 +18,9 @@ extension TestSummary {
 
   public func format() -> String {
     if isSuccess {
-      return "Tests Passed: \(description)".bold.green
+      return "\nTests Passed: \(description)".bold.green
     } else {
-      return "Tests Failed: \(description)".bold.red
+      return "\nTests Failed: \(description)".bold.red
     }
   }
 }
